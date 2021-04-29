@@ -54,6 +54,12 @@ uint16_t ADCFeedback = 0;
 uint64_t _micros = 0;
 
 uint64_t TimeOutputLoop = 0;
+
+uint16_t PWMOut = 5000;
+//PID
+int16_t error = 0;
+float Kp=1;
+int16_t Error_Kp = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,10 +131,17 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  //HAL_ADC_GetValue(&hadc1);
-//	  if(micros() - TimeOutputLoop >= 1000) //us
-//	  {
-//
-//	  }
+	  if(micros() - TimeOutputLoop >= 1000) //us
+	  	{
+	  		TimeOutputLoop = micros();
+
+	  		error = 1241 - ADCFeedback;
+	  		Error_Kp = Kp*error;
+
+	  		PWMOut += Error_Kp;
+
+	  		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1, PWMOut); //Period = 10000 (set much as possible because resolution of compare value ->0.0001 that means resolution of PWM)
+	  	}
   }
   /* USER CODE END 3 */
 }
