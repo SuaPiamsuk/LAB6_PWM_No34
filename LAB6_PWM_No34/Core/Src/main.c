@@ -135,7 +135,8 @@ int main(void)
 	  	{
 	  		TimeOutputLoop = micros();
 
-	  		error = 1241 - ADCFeedback;
+	  		error = 1241 - ADCFeedback; //set point - feedback
+
 	  		Error_Kp = Kp*error;
 
 	  		PWMOut += Error_Kp;
